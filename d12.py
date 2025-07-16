@@ -1,74 +1,47 @@
 import random
-def deal_card():
-    cards=[11,2,3,4,5,6,7,8,9,10,10,10,10]
-    card=random.choice(cards)
-    return card
 
-def calculate_score(cards):
-    if 11 in cards and 10 in cards and len(cards)==2:
-        return 0
-    if 11 in cards and sum(cards)>21:
-        cards.remove(11)
-        cards.append(1)
-    return sum(cards)
-
-def compare(u_score,c_score):
-    if u_score==c_score:
-        return "Draw"
-    elif c_score==0:
-        return "Lose, Dealer has Blackjack"
-    elif u_score==0:
-        return "Win, You have Blackjack"
-    elif u_score>21:
-        return "Lose, You went over"
-    elif c_score>21:
-        return "Win, Dealer went over"
-    elif u_score>c_score:
-        return "You Win"
-    else:
-        return "You Lose"
-
-def play_game():
-    print("""
-.------.            _     _            _    _            _    
-|A_  _ |.          | |   | |          | |  (_)          | |   
-|( \/ ).-----.     | |__ | | __ _  ___| | ___  __ _  ___| | __
-| \  /|K /\  |     | '_ \| |/ _' |/ __| |/ / |/ _' |/ __| |/ /
-|  \/ | /  \ |     | |_) | | (_| | (__|   <| | (_| | (__|   < 
-'-----| \  / |     |_.__/|_|\__,_|\___|_|\_\ |\__,_|\___|_|\_\\
-      |  \/ K|                            _/ |                
-      '------'                           |__/   
-""")
-    user_cards=[]
-    computer_cards=[]
-    is_game_over=False
-    # deal the initial two cards
-    for _ in range(2):
-        user_cards.append(deal_card())
-        computer_cards.append(deal_card())
-    while not is_game_over:
-        #Calculate initial score
-        user_score=calculate_score(user_cards)
-        comp_score=calculate_score(computer_cards)
-        print(f"Your cards: {user_cards}, current score: {user_score}")
-        print(f"Computer's first card: {computer_cards[0]}")
-        if user_score==0 or comp_score==0 or user_score>21:
-            is_game_over=True
+def guess_number(random_number,attempts):
+    number_of_guesses=0
+    while attempts>0:
+        print(f"You have {attempts} attempts remaining to guess the number.")
+        guess=int(input("Make a guess: "))
+        number_of_guesses+=1
+        if guess==random_number:
+            print(f"Congratulations, you have guessed the number in {number_of_guesses} attempts!")
+            break
+        elif guess>random_number:
+            print("Too high!")
         else:
-            next=input("Type 'y' to get another card or 'n' to stop: ")
-            if next=='y':
-                user_cards.append(deal_card())
-            else:
-                is_game_over=True
-    while comp_score!=0 and comp_score<17:
-        computer_cards.append(deal_card())
-        comp_score=calculate_score(computer_cards)
+            print("Too low!")
+        attempts-=1
+        if attempts>0:
+            print("Guess Again!")
+    if attempts==0:
+        print("You have run out of attempts. The number was "+str(random_number))
 
-    print(f"Your final hand is {user_cards}. final score: {user_score}")
-    print(f"Computer's final hand is {computer_cards}. final score: {comp_score}")
-    print(compare(user_score,comp_score))
+while True:
+    print("Welcome to the number guessing game")
+    print("I am thinking of a number between 1 and 100")
+    while True:
+        difficulty=input("Choose a difficulty level. Type 'easy' or 'hard': ").lower()
+        if difficulty == 'easy':
+            attempts=10
+            break
+        elif difficulty == 'hard':
+            attempts=5
+            break
+        else:
+            print("Invalid input. Please choose 'easy' or 'hard'.")
+    number=random.randint(1,100)   
+    guess_number(number,attempts)
 
-while input("Do you want to play a game of BlackJack? Type 'y' or 'n': ")=='y':
-    print("\n"*15)
-    play_game()
-    
+    play_again = input("\nDo you want to play again? (y/n): ").lower()
+    if play_again != 'y':
+        print("Thanks for playing. Goodbye! 👋")
+        break
+    else:
+        print("\n"*15)
+
+
+
+
